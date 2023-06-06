@@ -2,7 +2,7 @@ import { UsersRepository } from "../repositories/usersRepository"
 import { ICreate } from '../interfaces/usersInterface';
 import { hash } from "bcrypt";
 
-
+// parecido com users controllers 
 class UsersServices { 
     private usersRepository: UsersRepository
 
@@ -10,6 +10,7 @@ class UsersServices {
         this.usersRepository = new UsersRepository
     }
 
+    // criar o usuário e fazer as validações 
     async create({ name, email, password }: ICreate) { 
         const findUser = await this.usersRepository.findUserByEmail(email)
 

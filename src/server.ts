@@ -1,30 +1,30 @@
-import express, { Application, NextFunction, Request, Response, urlencoded } from 'express'
+import express, { Application, NextFunction, Request, Response } from 'express'
 import { UsersRoutes } from './routes/users.routes'
+import multer from 'multer'
 
 const app: Application = express() 
 
 app.use(express.json()) //poder trabalhar com dados json 
-app.use(express.urlencoded({ extended: true })) //coloca porcentagem
+app.use(express.urlencoded({ extended: true })) //coloca percentagem
 
+const usersRoutes = new UsersRoutes().getRoutes()//chamada pra rota de usuários
+const upload = multer()
 
-//chamada pra rota de usuarios
-const usersRoutes = new UsersRoutes().getRoutes()
+app.use('/users', upload.any(), usersRoutes)
 
-app.use('/users', usersRoutes)
-
-
-//tratamento do erro que mandou pelo constrollers 
+//tratamento do erro que mandou pelo controllers 
 app.use((err: Error, request: Request, response: Response, next: NextFunction) => { 
-    if(err instanceof Error) { 
+    if(err instanceof Error) { // quer dizer que se ...  throw new Error('erro')
         return response.status(400).json({ 
             message: err.message,
         })
     }
-    return response.status(500).json({
+    return response.status(500).json({  
         message: 'Internal Server Error'
     })
 
 })
+
 
 
 app.listen(3000, () => console.log('server ok'))

@@ -1,10 +1,10 @@
-import { prisma } from "../database/prima";
+import { prisma } from "../database/prisma";
 import { ICreate } from "../interfaces/usersInterface";
 
-
+// mesma estrutura básica de users controllers
 class UsersRepository { 
-    async create( { name, email, password }: ICreate) { 
-        const result = await prisma.users.create({ 
+    async create({ name, email, password }: ICreate) { 
+        const result = await prisma.users.create({ // instância database para pegar a tabela
             data: {
                 name, 
                 email, 
@@ -15,7 +15,7 @@ class UsersRepository {
     }
 
     async findUserByEmail(email: string) { 
-        const result = await prisma.users.findUnique({
+        const result = await prisma.users.findUnique({ // verificar se existe o usuario 
             where: {
                 email,
             }
