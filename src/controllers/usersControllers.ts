@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { UsersServices } from "../services/usersServices";
-import { s3 } from "../config/aws";
-import { v4 as uuid } from 'uuid'
+
 
 class UsersController { 
     private usersServices: UsersServices
@@ -25,24 +24,32 @@ class UsersController {
             next(error) //não é resp. por mostrar erro
         }
     }
-    auth() { //autenticação
+    async auth( request: Request, response: Response, next: NextFunction ) { //autenticação
+        const { email, password } = request.body
+
+        try {
+            const result = await this.usersServices.auth( email, password )
+            return response.json(result)
+
+        } catch (error) {
+            next(error)
+        }
     }
     async update( request: Request, response: Response, next: NextFunction  ) { 
         const { name, oldPassword, newPassword, avatar_url } = request.body
+        const { user_id } = request
         console.log(request.file)
         
         try {
-            const avatar_url = request.file?.buffer
-            const uploadS3 = await s3.upload({
-                Bucket: 'semana-heroi', //nome 
-                Key: `${uuid()}-${request.file?.originalname}`, //nome original
-                ACL: 'public-read', // ler de forma publica 
-                Body: avatar_url, // constante criada
+            const result = await this.usersServices.update({
+                name, 
+                oldPassword, 
+                newPassword, 
+                avatar_url: request.file,
+                user_id,
             })
-            .promise()
 
-            console.log('url imagem ->', uploadS3.Location)
-
+            return response.status(200).json(result)
         } catch (error) {
             next(error) 
         }
