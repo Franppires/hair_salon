@@ -4,37 +4,37 @@ import { upload } from '../config/multer';
 import { AuthMiddleware } from '../middleware/AuthMiddleware';
 
 class UsersRoutes {
-    private router: Router
-    private usersController: UsersController
-    private authMiddleware: AuthMiddleware
-    
-    constructor() { 
-        this.router = Router()
-        this.usersController = new UsersController()
-        this.authMiddleware = new AuthMiddleware
-    } 
+  private router: Router;
+  private usersController: UsersController;
+  private authMiddleware: AuthMiddleware;
 
-    getRoutes() { //buscar rotas 
-        this.router.post(
-            '/', 
-            this.usersController.store.bind(this.usersController), 
-        )
-        
-        this.router.put(
-            '/', 
-            upload.single('avatar_url'),
-            this.authMiddleware.auth.bind(this.authMiddleware),
-            this.usersController.update.bind(this.usersController),
-        )
+  constructor() {
+    this.router = Router();
+    this.usersController = new UsersController();
+    this.authMiddleware = new AuthMiddleware();
+  }
 
-        this.router.post(
-            '/auth', 
-            this.usersController.auth.bind(this.usersController)
-        )        
+  getRoutes() {
+    //buscar rotas
+    this.router.post(
+      '/',
+      this.usersController.store.bind(this.usersController)
+    );
 
-        return this.router
-    }
-    
+    this.router.put(
+      '/',
+      upload.single('avatar_url'),
+      this.authMiddleware.auth.bind(this.authMiddleware),
+      this.usersController.update.bind(this.usersController)
+    );
+
+    this.router.post(
+      '/auth',
+      this.usersController.auth.bind(this.usersController)
+    );
+
+    return this.router;
+  }
 }
 
-export { UsersRoutes }
+export { UsersRoutes };
