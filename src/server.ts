@@ -1,12 +1,16 @@
 import express, { Application, NextFunction, Request, Response } from 'express';
 import { UsersRoutes } from './routes/users.routes';
+import { SchedulesRoutes } from './routes/schedule.routes';
 
 const app: Application = express();
 app.use(express.json()); //poder trabalhar com dados json
 app.use(express.urlencoded({ extended: true })); //coloca percentagem
 
 const usersRoutes = new UsersRoutes().getRoutes(); //chamada pra rota de usuários
-app.use('/users', usersRoutes);
+const schedulesRoutes = new SchedulesRoutes().getRoutes() //chamada para os agendamentos 
+
+app.use('/users', usersRoutes); //rota para usuarios 
+app.use('/schedules', schedulesRoutes); //rota par agendamentos  
 
 //tratamento do erro que mandou pelo controllers
 app.use(
